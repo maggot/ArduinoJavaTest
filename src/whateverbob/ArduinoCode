@@ -1,0 +1,62 @@
+//This is the code that goes on the SmartCar
+//but not all brushed to perfection yet.
+
+#include <Smartcar.h>
+#include <Wire.h>
+#include <Servo.h>
+
+Car car;
+Gyroscope gyro;
+int motorSpeed = 100; //80% of the max speed
+
+void setup() {
+  gyro.attach();
+  car.begin(gyro);
+  Serial.begin(9600);
+  Serial.setTimeout(200);
+  car.begin();
+}
+
+void loop() {
+  handleInput();
+}
+
+void handleInput() { //handle serial input if there is any
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');
+    if (input.startsWith("w")) {
+      int throttle = input.substring(1).toInt(); // Example: recieve 'w100' = move forward with speed 100.
+      car.setSpeed(throttle);
+    }else if (input.startsWith("d")){
+      int deg = input.substring(1).toInt();      // Example: recieve 'a90' = rotate right 90 degrees
+      rotateOnSpot(deg);
+    }else if (input.startsWith("a")){
+      int deg = input.substring(1).toInt();      // Example: recieve 'd-90' = rotate left -90 degrees
+      rotateOnSpot(-deg);
+    }else if (input.startsWith("x")){
+      int throttle = input.substring(1).toInt(); // Example: recieve 'x100' = reverse with speed 100.
+      car.setSpeed(-throttle);
+    }else if (input.startsWith("q")){
+      int deg = input.substring(1).toInt();      // Example: recieve 'not yet fully determined'
+      car.setAngle(-deg);
+    }else if (input.startsWith("e")){
+      int deg = input.substring(1).toInt();      // Example: recieve 'not yet fully determined'
+      car.setAngle(deg);
+    }
+  }
+}
+
+void rotateOnSpot(int targetDegrees){
+  if (!targetDegrees) return; //if the target degrees is 0, don't bother doing anything
+  gyro.begin(); //initiate the measurement
+  /* Let's set opposite speed on each side of the car, so it rotates on spot */
+  if (targetDegrees > 0){ //positive value means we should rotate clockwise
+    car.setMotorSpeed(motorSpeed, -motorSpeed); // left motors spin forward, right motors spin backward
+  }else{ //rotate counter clockwise
+    car.setMotorSpeed(-motorSpeed, motorSpeed); // left motors spin backward, right motors spin forward
+  }
+  while (abs(gyro.getAngularDisplacement()) <= abs(targetDegrees)){ //while we have not reached the desired degrees
+    gyro.update(); //update the gyro readings
+  }
+  car.stop(); //we have reached the target, so stop the car
+}
