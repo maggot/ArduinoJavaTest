@@ -1,17 +1,12 @@
-package whateverbob;
+package RaspberryPi;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-import java.util.Enumeration;
-import whateverbob.SerialTest;
-import java.io.IOException;
+import java.lang.Math;
 
-public class TestClass {
+
+public class SmartCarComm {
 	public static BufferedReader input;
 	public static OutputStream output;
 
@@ -24,14 +19,35 @@ public class TestClass {
 		}
 	}
 
+	public void setSpeed(int speed){
+
+		if(speed > 0){
+			writeData("s" + speed);
+		}
+		else{
+			writeData("s" + Math.abs(speed));
+		}
+	}
+	public void setAngle(int angle){
+
+		if(angle < 400 && angle > -400){
+			writeData("a" + angle);
+		}
+		else{
+			//writeData("a" + Math.abs(angle));
+		}
+	}
+
+
+
 	public static void main(String[] ag) {
 
 		try {
-			SerialTest obj = new SerialTest();
+			SerialConnect obj = new SerialConnect();
 			int c = 0;
 			obj.initialize();
-			input = SerialTest.input;
-			output = SerialTest.output;
+			input = SerialConnect.input;
+			output = SerialConnect.output;
 			InputStreamReader Ir = new InputStreamReader(System.in);
 			BufferedReader Br = new BufferedReader(Ir);
 			while (c != 7) {

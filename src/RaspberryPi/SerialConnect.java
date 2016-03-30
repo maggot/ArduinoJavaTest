@@ -1,4 +1,4 @@
-package whateverbob;
+package RaspberryPi;
 
 /**
  *
@@ -13,7 +13,7 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
-public class SerialTest implements SerialPortEventListener {
+public class SerialConnect implements SerialPortEventListener {
 
 	public SerialPort serialPort;
 	/** The port we're normally going to use. */
@@ -104,7 +104,7 @@ public class SerialTest implements SerialPortEventListener {
 	}
 
 	public static void main(String[] args) throws Exception {
-		SerialTest main = new SerialTest();
+		SerialConnect main = new SerialConnect();
 		main.initialize();
 		Thread t = new Thread() {
 			public void run() {
