@@ -1,9 +1,6 @@
 package RaspberryPi;
 
-/**
- *
- * @author Atulmaharaj
- */
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -18,8 +15,8 @@ public class SerialConnect implements SerialPortEventListener {
 	public SerialPort serialPort;
 	/** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac
-																				// OS
-																				// X
+			// OS
+			// X
 			"/dev/ttyUSB0", // Linux
 			"COM4", // Windows
 	};
@@ -113,7 +110,8 @@ public class SerialConnect implements SerialPortEventListener {
 				// incoming messages to console).
 				try {
 					Thread.sleep(1500);
-					writeData("2");
+					// SmartCarComm sm = new SmartCarComm(); needs to initialize
+
 				} catch (InterruptedException ie) {
 				}
 			}
