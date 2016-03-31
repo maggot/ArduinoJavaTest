@@ -19,6 +19,7 @@ public class SmartCarComm {
 		try {
 			System.out.println("Sending : " + data);
 			output.write(data.getBytes());
+			output.flush();
 		} catch (Exception e) {
 			System.out.println("could not write to port");
 		}

@@ -7,15 +7,18 @@ import java.net.Socket;
 
 public class RemoteControllListener {
     private InputStream in;
+    SmartCarComm sc;
 
     public static void main(String[] args) {
         try {
             System.out.println("Listening");
-            RemoteControllListener rcl = new RemoteControllListener(1234);//change this port number
+            SmartCarComm sc = new SmartCarComm();
+            RemoteControllListener rcl = new RemoteControllListener(1234, sc);
+
         } catch (Exception e) {
             System.out.println("Failed " + e.getMessage());
         }
-        SerialConnect main = new SerialConnect();
+
         Thread t = new Thread() {
             public void run() {
                 // the following line will keep this app alive for 1000 seconds,
@@ -33,9 +36,9 @@ public class RemoteControllListener {
 
     }
 
-    public RemoteControllListener(int port) throws IOException {
+    public RemoteControllListener(int port, SmartCarComm sc) throws IOException {
         ServerSocket listener = new ServerSocket(port);
-        SmartCarComm sc = new SmartCarComm();
+        this.sc = sc;
 
         Socket socket = listener.accept();
         while (!socket.isClosed()) {
