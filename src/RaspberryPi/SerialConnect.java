@@ -16,18 +16,25 @@ import java.util.Enumeration;
 public class SerialConnect implements SerialPortEventListener {
 
 	public SerialPort serialPort;
-	/** The port we're normally going to use. */
-	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac OS X
-			"/dev/ttyUSB0", // Linux
+	/**
+	 * The port we're normally going to use.
+	 */
+	private static final String PORT_NAMES[] = {
+			"/dev/tty.usbserial-A9007UX1", // Mac OS X
+			//"/dev/ttyUSB0", // Linux
 			"/dev/ttyACM0", // Raspberry Pi
 			"COM4", // Windows
 	};
 
 	public static BufferedReader input;
 	public static OutputStream output;
-	/** Milliseconds to block while waiting for port open */
+	/**
+	 * Milliseconds to block while waiting for port open
+	 */
 	public static final int TIME_OUT = 2000;
-	/** Default bits per second for COM port. */
+	/**
+	 * Default bits per second for COM port.
+	 */
 	public static final int DATA_RATE = 9600;
 
 	public void initialize() {
@@ -55,25 +62,28 @@ public class SerialConnect implements SerialPortEventListener {
 		}
 
 		try {
+			System.out.println("Opening port.");
 			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
-					TIME_OUT);
-
+			serialPort = (SerialPort) portId.open(this.getClass().getName(), TIME_OUT);
+			System.out.println("Setting parameter");
 			// set port parameters
 			serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8,
 					SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-
+			System.out.println("Opening streams");
 			// open the streams
 			input = new BufferedReader(new InputStreamReader(
 					serialPort.getInputStream()));
 			output = serialPort.getOutputStream();
 			char ch = 1;
+			System.out.println("Writing to port.");
 			output.write(ch);
 
+			System.out.println("Adding event listeners");
 			// add event listeners
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
 		} catch (Exception e) {
+			System.out.println("Caught exception");
 			System.err.println(e.toString());
 		}
 	}
@@ -106,23 +116,5 @@ public class SerialConnect implements SerialPortEventListener {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		SerialConnect main = new SerialConnect();
-		main.initialize();
-		Thread t = new Thread() {
-			public void run() {
-				// the following line will keep this app alive for 1000 seconds,
-				// waiting for events to occur and responding to them (printing
-				// incoming messages to console).
-				try {
-					Thread.sleep(1500);
-					writeData("2");
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-			}
-		};
-		t.start();
-		System.out.println("Started");
-	}
+
 }

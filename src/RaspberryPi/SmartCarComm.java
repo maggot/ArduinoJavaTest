@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.OutputStream;
 
 public class SmartCarComm {
-	public static BufferedReader input;
-	public static OutputStream output;
+	public BufferedReader input;
+	public OutputStream output;
 
 	public SmartCarComm(){
 		SerialConnect obj = new SerialConnect();
@@ -18,17 +18,16 @@ public class SmartCarComm {
 
 	}
 
-	public static synchronized void writeData(String data) {
-		System.out.println("Sent: " + data);
+	public void writeData(String data) {
 		try {
-			System.out.println(data);
+			System.out.println("Sending : " + data);
 			output.write(data.getBytes());
 		} catch (Exception e) {
 			System.out.println("could not write to port");
 		}
 	}
 
-	public static void setSpeed(int speed){
+	public void setSpeed(int speed){
 
 		if((speed <= 100) && (speed >= -100)){
 			writeData("w" + speed);
