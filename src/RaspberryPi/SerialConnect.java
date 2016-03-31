@@ -1,6 +1,9 @@
 package RaspberryPi;
 
-
+/**
+ *
+ * @author Atulmaharaj
+ */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -14,10 +17,9 @@ public class SerialConnect implements SerialPortEventListener {
 
 	public SerialPort serialPort;
 	/** The port we're normally going to use. */
-	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac
-			// OS
-			// X
+	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac OS X
 			"/dev/ttyUSB0", // Linux
+			"/dev/ttyACM0", // Raspberry Pi
 			"COM4", // Windows
 	};
 
@@ -29,13 +31,17 @@ public class SerialConnect implements SerialPortEventListener {
 	public static final int DATA_RATE = 9600;
 
 	public void initialize() {
+		// the next line is for Raspberry Pi and
+		// gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
+		System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
+
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
 		// First, Find an instance of serial port as set in PORT_NAMES.
 		while (portEnum.hasMoreElements()) {
-			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum
-					.nextElement();
+			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+
 			for (String portName : PORT_NAMES) {
 				if (currPortId.getName().equals(portName)) {
 					portId = currPortId;
@@ -110,9 +116,9 @@ public class SerialConnect implements SerialPortEventListener {
 				// incoming messages to console).
 				try {
 					Thread.sleep(1500);
-					// SmartCarComm sm = new SmartCarComm(); needs to initialize
-
+					writeData("2");
 				} catch (InterruptedException ie) {
+					ie.printStackTrace();
 				}
 			}
 		};
