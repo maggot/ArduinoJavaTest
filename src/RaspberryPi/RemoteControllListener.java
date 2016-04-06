@@ -47,18 +47,18 @@ public class RemoteControllListener {
                 String buffer = "";
                 //if there's any input do the following
                 while (in.available() > 0) {
-                    buffer = buffer + (char)in.read();
+                    buffer += (char)in.read();
                 }
 
                 if(buffer.length() > 0)
                 {
                     char first = buffer.charAt(0);
                     if (first == 's') {
-                        sc.setSpeed(Integer.parseInt(buffer.substring(1)));
+                        sc.setSpeed(Integer.parseInt(buffer.substring(1,buffer.indexOf('/'))));
                     } else if (first == 'a') {
-                        sc.setAngle(Integer.parseInt(buffer.substring(1)));
+                        sc.setAngle(Integer.parseInt(buffer.substring(1,buffer.indexOf('/'))));
                     } else if (first == 'r') {
-                        sc.setRotate(Integer.parseInt(buffer.substring(1)));
+                        sc.setRotate(Integer.parseInt(buffer.substring(1,buffer.indexOf('/'))));
                     }
                 }
 

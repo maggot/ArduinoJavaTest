@@ -12,7 +12,6 @@ public class SmartCarComm {
 		obj.initialize();
 		input = SerialConnect.input;
 		output = SerialConnect.output;
-		setSpeed(100);
 	}
 
 	public synchronized void writeData(String data) {
@@ -27,19 +26,19 @@ public class SmartCarComm {
 
 	public void setSpeed(int speed){
 		if((speed <= 100) && (speed >= -100)){
-			writeData("w" + speed);
+			writeData("w" + speed + "/");
 		}
 	}
 
 	public void setAngle(int angle){
-		if(angle < 400 && angle > -400){
-			writeData("a" + angle);
+		if(angle < 360 && angle > -360){
+			writeData("a" + angle + "/");
 		}
 	}
 
 	public void setRotate(int angle){
-		if(angle < 400 && angle > -400){
-			writeData("r" + angle);
+		if(angle < 360 && angle > -360){
+			writeData("r" + angle + "/");
 		}
 	}
 }
