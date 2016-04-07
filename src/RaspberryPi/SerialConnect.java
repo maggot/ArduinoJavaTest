@@ -11,6 +11,8 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+
+import java.lang.reflect.Field;
 import java.util.Enumeration;
 
 public class SerialConnect implements SerialPortEventListener {
@@ -37,10 +39,18 @@ public class SerialConnect implements SerialPortEventListener {
 	 */
 	public static final int DATA_RATE = 9600;
 
-	public void initialize() {
+	public void initialize() throws NoSuchFieldException {
 		// the next line is for Raspberry Pi and
 		// gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
-		System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
+		try {
+		System.setProperty("gnu.io.rxtx.SerialPorts", "/usr/lib/jni");
+		Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+		fieldSysPath.setAccessible( true );
+		fieldSysPath.set( null, null );
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
