@@ -6,10 +6,15 @@ import java.io.OutputStream;
 public class SmartCarComm {
 	public BufferedReader input;
 	public OutputStream output;
+	SerialConnect obj;
 
 	public SmartCarComm(){
-		SerialConnect obj = new SerialConnect();
-		obj.initialize();
+		this.obj = new SerialConnect();
+		try {
+			obj.initialize();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
 		input = SerialConnect.input;
 		output = SerialConnect.output;
 	}
@@ -40,5 +45,9 @@ public class SmartCarComm {
 		if(angle < 360 && angle > -360){
 			writeData("r" + angle + "/");
 		}
+	}
+
+	public void close() {
+		this.obj.close();
 	}
 }

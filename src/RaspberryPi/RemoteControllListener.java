@@ -9,32 +9,6 @@ public class RemoteControllListener {
     private InputStream in;
     SmartCarComm sc;
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("Listening");
-            SmartCarComm sc = new SmartCarComm();
-            RemoteControllListener rcl = new RemoteControllListener(1234, sc);
-
-        } catch (Exception e) {
-            System.out.println("Failed " + e.getMessage());
-        }
-
-        Thread t = new Thread() {
-            public void run() {
-                // the following line will keep this app alive for 1000 seconds,
-                // waiting for events to occur and responding to them (printing
-                // incoming messages to console).
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
-            }
-        };
-        t.start();
-        System.out.println("Started");
-
-    }
 
     public RemoteControllListener(int port, SmartCarComm sc) throws IOException {
         ServerSocket listener = new ServerSocket(port);
@@ -59,6 +33,12 @@ public class RemoteControllListener {
                         sc.setAngle(Integer.parseInt(buffer.substring(1,buffer.indexOf('/'))));
                     } else if (first == 'r') {
                         sc.setRotate(Integer.parseInt(buffer.substring(1,buffer.indexOf('/'))));
+                    }else if (first == 'c') {
+                        if(buffer.charAt(1) == 's') {
+                            listener.close();
+                            socket.close();
+                            this.sc.close();
+                        }
                     }
                 }
 

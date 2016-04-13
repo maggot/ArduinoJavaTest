@@ -42,15 +42,7 @@ public class SerialConnect implements SerialPortEventListener {
 	public void initialize() throws NoSuchFieldException {
 		// the next line is for Raspberry Pi and
 		// gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
-		try {
-		System.setProperty("gnu.io.rxtx.SerialPorts", "/usr/lib/jni");
-		Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-		fieldSysPath.setAccessible( true );
-		fieldSysPath.set( null, null );
-
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
 
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -68,6 +60,7 @@ public class SerialConnect implements SerialPortEventListener {
 		}
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
+			this.close();
 			return;
 		}
 
@@ -114,7 +107,6 @@ public class SerialConnect implements SerialPortEventListener {
 				System.err.println(e.toString());
 			}
 		}
-
 	}
 
 	public static synchronized void writeData(String data) {
